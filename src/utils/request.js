@@ -31,7 +31,7 @@ function checkStatus(response) {
   error.response = response;
   throw error;
 }
-
+const HOST = 'http://115.28.72.117';
 /**
  * Requests a URL, returning a promise.
  *
@@ -43,6 +43,7 @@ export default function request(url, options) {
   const defaultOptions = {
     credentials: 'include',
   };
+  const URL = HOST + url;
   const newOptions = { ...defaultOptions, ...options };
   if (newOptions.method === 'POST' || newOptions.method === 'PUT') {
     newOptions.headers = {
@@ -53,7 +54,7 @@ export default function request(url, options) {
     newOptions.body = JSON.stringify(newOptions.body);
   }
 
-  return fetch(url, newOptions)
+  return fetch(URL, newOptions)
     .then(checkStatus)
     .then((response) => {
       if (newOptions.method === 'DELETE' || response.status === 204) {
