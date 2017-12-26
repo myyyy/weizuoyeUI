@@ -15,12 +15,13 @@ export default {
         payload: true,
       });
       const response = yield call(fakeAccountLogin, payload);
+      // console.log('88888888', response, payload);
       yield put({
         type: 'changeLoginStatus',
         payload: response,
       });
       // Login successfully
-      if (response.status === 'ok') {
+      if (response.status === true) {
         yield put(routerRedux.push('/'));
       }
     },

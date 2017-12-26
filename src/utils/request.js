@@ -20,6 +20,7 @@ const codeMessage = {
 };
 function checkStatus(response) {
   if (response.status >= 200 && response.status < 300) {
+    // console.log('11',response);
     return response;
   }
   const errortext = codeMessage[response.status] || response.statusText;
@@ -31,7 +32,7 @@ function checkStatus(response) {
   error.response = response;
   throw error;
 }
-const HOST = 'http://115.28.72.117';
+const HOST = 'http://127.0.0.1:9878';
 /**
  * Requests a URL, returning a promise.
  *
@@ -48,18 +49,18 @@ export default function request(url, options) {
   if (newOptions.method === 'POST' || newOptions.method === 'PUT') {
     newOptions.headers = {
       Accept: 'application/json',
-      'Content-Type': 'application/json; charset=utf-8',
       ...newOptions.headers,
     };
     newOptions.body = JSON.stringify(newOptions.body);
   }
-
+  // console.log(newOptions);
   return fetch(URL, newOptions)
     .then(checkStatus)
     .then((response) => {
       if (newOptions.method === 'DELETE' || response.status === 204) {
         return response.text();
       }
+      // console.log(response);
       return response.json();
     });
 }
