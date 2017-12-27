@@ -91,3 +91,9 @@ Any Contribution of following ways will be welcome:
 - Use Ant Design Pro in your daily work.
 - Submit [issue](http://github.com/ant-design/ant-design-pro/issues) to report bug or ask questions.
 - Propose [pull request](http://github.com/ant-design/ant-design-pro/pulls) to improve our code.
+
+#开发遇到的坑以及备注
+
+components(页面modl)-》model（前端数据逻辑处理部分）-》service（后台接口配置部分）
+
+model-》service调用后端接口 并返回数据给commponents
