@@ -32,6 +32,7 @@ function checkStatus(response) {
   error.response = response;
   throw error;
 }
+// const HOST = 'http://115.28.72.117:610';
 const HOST = 'http://127.0.0.1:9878';
 /**
  * Requests a URL, returning a promise.
@@ -45,6 +46,7 @@ export default function request(url, options) {
     credentials: 'include',
   };
   const URL = HOST + url;
+  // const URL =  url;
   const newOptions = { ...defaultOptions, ...options };
   if (newOptions.method === 'POST' || newOptions.method === 'PUT') {
     newOptions.headers = {
