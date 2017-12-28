@@ -77,3 +77,28 @@ export async function fakeRegister(params) {
 export async function queryNotices() {
   return request('/api/notices');
 }
+
+export async function queryCourse() {
+  return request('/course');
+}
+
+export async function AddCourse(params) {
+  return request('/course', {
+    method: 'POST',
+    body: params,
+  });
+}
+
+export async function UpdateCourse(params) {
+  return request('/course', {
+    method: 'PUT',
+    body: params,
+  });
+}
+
+export async function DeleteCourse(params) {
+  return request('/course', {
+    method: 'DELETE',
+    body: params,
+  });
+}

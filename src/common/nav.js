@@ -90,6 +90,11 @@ export const getNavData = app => [
             component: dynamicWrapper(app, ['list'], () => import('../routes/List/CardList')),
           },
           {
+            name: '课程',
+            path: 'course',
+            component: dynamicWrapper(app, ['course'], () => import('../routes/Course/Course')),
+          },
+          {
             name: '搜索列表',
             path: 'search',
             component: dynamicWrapper(app, [], () => import('../routes/List/List')),

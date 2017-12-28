@@ -97,3 +97,14 @@ Any Contribution of following ways will be welcome:
 components(页面modl)-》model（前端数据逻辑处理部分）-》service（后台接口配置部分）
 
 model-》service调用后端接口 并返回数据给commponents
+
+路径跳转 
+nav->router（namespace）->course(namespace)->nav
+<!-- 
+(这断代码用来调去api数据)
+const dynamicWrapper = (app, models, component) => dynamic({
+  app,
+  models: () => models.map(m => import(`../models/${m}.js`)),
+  component,
+}); 
+-->
