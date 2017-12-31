@@ -18,13 +18,18 @@ export default class CourseList extends PureComponent {
     coursecode: '',
     coursedescription: '',
   };
-  componentDidMount() {
-    this.props.dispatch({
+  // 公共方法
+  get_course_data = ()=>{
+    const { dispatch } = this.props;
+    dispatch({
       type: 'course/fetch',
       payload: {
         count: 8,
       },
     });
+  }
+  componentDidMount() {
+    this.get_course_data();
   }
   handleModalVisible = (flag) => {
     this.setState({
@@ -47,6 +52,15 @@ export default class CourseList extends PureComponent {
       coursedescription: e.target.value,
     });
   }
+  handleRemove = (_id,e) =>{
+    console.log(e)
+    this.props.dispatch({
+      type: 'course/remove',
+      pyload:{
+        _id: _id,
+      },
+    });
+  }
   handleAdd = () => {
     this.props.dispatch({
       type: 'course/add',
@@ -56,6 +70,8 @@ export default class CourseList extends PureComponent {
         description: this.state.coursedescription,
       },
     });
+    // this.props 包含dom数据，即添加完成之后刷新页面的数据，每个添加都要掉一次这个
+    this.get_course_data();
     message.success('添加成功');
     this.setState({
       modalVisible: false,
@@ -105,7 +121,7 @@ export default class CourseList extends PureComponent {
             dataSource={['', ...list]}
             renderItem={item => (item ? (
               <List.Item key={item._id['$oid']}>
-                <Card hoverable className={styles.card} actions={[<a>编辑</a>, <a>删除</a>,<a>查看</a>]}>
+                <Card hoverable className={styles.card} actions={[<a>编辑</a>, <a onClick={(e) => this.handleRemove(item._id['$oid'],e)}>删除</a>,<a>查看</a>]}>
                   <Card.Meta
                     avatar={ <Badge count={item.unfinish}><img alt="" className={styles.cardAvatar} src={item.avatar} /></Badge>}
                     title={<a href="#">{item.name}</a>}
