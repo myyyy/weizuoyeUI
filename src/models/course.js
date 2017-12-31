@@ -27,13 +27,13 @@ export default {
     },
     *add({ payload }, { call, put }) {
         yield put({
-          type: 'changeSubmitting',
+          type: 'changeLoading',
           payload: true,
         });
         const response = yield call(AddCourse, payload);
         // console.log('88888888', response, payload);
         yield put({
-          type: 'changeCourseStatus',
+          type: 'addCourse',
           payload: response,
         });
         // Login successfully
@@ -41,22 +41,6 @@ export default {
           yield put(routerRedux.push('/'));
         }
       },
-    *appendFetch({ payload }, { call, put }) {
-      yield put({
-        type: 'changeLoading',
-        payload: true,
-      });
-      const response = yield call(queryFakeList, payload);
-      yield put({
-        type: 'appendList',
-        // payload: Array.isArray(response.courses) ? response : [],
-        payload:response.courses,
-      });
-      yield put({
-        type: 'changeLoading',
-        payload: false,
-      });
-    },
   },
 
   reducers: {
@@ -67,6 +51,12 @@ export default {
       };
     },
     changeLoading(state, action) {
+      return {
+        ...state,
+        loading: action.payload,
+      };
+    },
+    addCourse(state, action) {
       return {
         ...state,
         loading: action.payload,

@@ -1,16 +1,23 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import { Card, Button, Icon, List } from 'antd';
+import { Card, Button, Icon, List, Modal, Badge, Form, Input, message} from 'antd';
 
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import Ellipsis from '../../components/Ellipsis';
 
 import styles from './CourseList.less';
 
+const FormItem = Form.Item;
 @connect(state => ({
   list: state.course,
 }))
 export default class CourseList extends PureComponent {
+  state = {
+    modalVisible: false,
+    coursename: '',
+    coursecode: '',
+    coursedescription: '',
+  };
   componentDidMount() {
     this.props.dispatch({
       type: 'course/fetch',
@@ -19,9 +26,46 @@ export default class CourseList extends PureComponent {
       },
     });
   }
+  handleModalVisible = (flag) => {
+    this.setState({
+      modalVisible: !!flag,
+    });
+  }
+
+  handleCourseName = (e) => {
+    this.setState({
+      coursename: e.target.value,
+    });
+  }
+  handleCourseCode = (e) => {
+    this.setState({
+      coursecode: e.target.value,
+    });
+  }
+  handleCourseDes = (e) => {
+    this.setState({
+      coursedescription: e.target.value,
+    });
+  }
+  handleAdd = () => {
+    this.props.dispatch({
+      type: 'course/add',
+      payload: {
+        name: this.state.coursename,
+        code: this.state.coursecode,
+        description: this.state.coursedescription,
+      },
+    });
+    message.success('添加成功');
+    this.setState({
+      modalVisible: false,
+    });
+  }
 
   render() {
     const { list: { list, loading } } = this.props;
+    const { modalVisible, coursecode, coursename, coursedescription } = this.state;
+
     const content = (
       <div className={styles.pageHeaderContent}>
         <p>
@@ -63,7 +107,7 @@ export default class CourseList extends PureComponent {
               <List.Item key={item._id['$oid']}>
                 <Card hoverable className={styles.card} actions={[<a>编辑</a>, <a>删除</a>,<a>查看</a>]}>
                   <Card.Meta
-                    avatar={<img alt="" className={styles.cardAvatar} src={item.avatar} />}
+                    avatar={ <Badge count={item.unfinish}><img alt="" className={styles.cardAvatar} src={item.avatar} /></Badge>}
                     title={<a href="#">{item.name}</a>}
                     description={(
                       <Ellipsis className={styles.item} lines={3}>{item.description}</Ellipsis>
@@ -73,7 +117,7 @@ export default class CourseList extends PureComponent {
               </List.Item>
               ) : (
                 <List.Item>
-                  <Button type="dashed" className={styles.newButton}>
+                  <Button type="dashed" className={styles.newButton} onClick={() => this.handleModalVisible(true)}>
                     <Icon type="plus" /> 新增课程
                   </Button>
                 </List.Item>
@@ -81,6 +125,34 @@ export default class CourseList extends PureComponent {
             )}
           />
         </div>
+        <Modal
+          title="新建课程"
+          visible={modalVisible}
+          onOk={this.handleAdd}
+          onCancel={() => this.handleModalVisible()}
+        >
+          <FormItem
+            labelCol={{ span: 5 }}
+            wrapperCol={{ span: 15 }}
+            label="名称"
+          >
+            <Input placeholder="课程名称" onChange={this.handleCourseName} value={coursename} />
+          </FormItem>
+          <FormItem
+            labelCol={{ span: 5 }}
+            wrapperCol={{ span: 15 }}
+            label="编号"
+          >
+            <Input placeholder="课程编号" onChange={this.handleCourseCode} value={coursecode} />
+          </FormItem>
+          <FormItem
+            labelCol={{ span: 5 }}
+            wrapperCol={{ span: 15 }}
+            label="描述"
+          >
+            <Input placeholder="课程描述（非必填）" onChange={this.handleCourseDes} value={coursedescription} />
+          </FormItem>
+        </Modal>
       </PageHeaderLayout>
     );
   }
