@@ -6,6 +6,8 @@ export default {
   state: {
     list: [],
     loading: false,
+    rm:true,
+    newc:'',
   },
 
   effects: {
@@ -40,6 +42,22 @@ export default {
         });
         if (callback) callback();
       },
+    *remove({payload, callback }, { call, put }) {
+      yield put({
+        type: 'changeLoading',
+        payload: true,
+      });
+      const response = yield call(DeleteCourse, payload);
+      yield put({
+        type: 'removeCourse',
+        payload: response,
+      });
+      yield put({
+        type: 'changeLoading',
+        payload: false,
+      });
+      if (callback) callback();
+    },
   },
 
   reducers: {
@@ -58,8 +76,14 @@ export default {
     addCourse(state, action) {
       return {
         ...state,
-        new: action.payload,
+        newc: action.payload,
       };
     },
+    removeCourse(state,action) {
+      return {
+        ...state,
+        rm: action.payload,
+      }; 
+    }
   },
 };

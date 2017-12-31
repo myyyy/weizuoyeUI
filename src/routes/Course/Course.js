@@ -53,12 +53,19 @@ export default class CourseList extends PureComponent {
     });
   }
   handleRemove = (_id,e) =>{
-    console.log(e)
     this.props.dispatch({
       type: 'course/remove',
-      pyload:{
+      payload:{
         _id: _id,
       },
+    });
+    console.log(this.props);
+    if(this.props.list.rm===true){
+      get_course_data();
+    }
+    message.success('删除成功');
+    this.setState({
+      modalVisible: false,
     });
   }
   handleAdd = () => {
@@ -71,15 +78,15 @@ export default class CourseList extends PureComponent {
       },
     });
     // this.props 包含dom数据，即添加完成之后刷新页面的数据，每个添加都要掉一次这个
-    this.get_course_data();
     message.success('添加成功');
     this.setState({
       modalVisible: false,
     });
+    this.get_course_data();
   }
 
   render() {
-    const { list: { list, loading } } = this.props;
+    const { list: { list, loading,rm,newc } } = this.props;
     const { modalVisible, coursecode, coursename, coursedescription } = this.state;
 
     const content = (

@@ -48,7 +48,7 @@ export default function request(url, options) {
   const URL = HOST + url;
   // const URL =  url;
   const newOptions = { ...defaultOptions, ...options };
-  if (newOptions.method === 'POST' || newOptions.method === 'PUT') {
+  if (newOptions.method === 'POST' || newOptions.method === 'PUT'||newOptions.method === 'DELETE') {
     newOptions.headers = {
       Accept: 'application/json',
       ...newOptions.headers,
