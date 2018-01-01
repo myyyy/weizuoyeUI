@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import { Card, Button, Icon, List, Modal, Badge, Form, Input, message} from 'antd';
+import { Card, Button, Icon, List, Modal, Badge, Form, Input, message,Popconfirm} from 'antd';
 
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import Ellipsis from '../../components/Ellipsis';
@@ -17,6 +17,9 @@ export default class CourseList extends PureComponent {
     coursename: '',
     coursecode: '',
     coursedescription: '',
+    onOk:'',
+    formdisabled:false,
+    course_id:'',
   };
   // 公共方法
   get_course_data = ()=>{
@@ -31,10 +34,21 @@ export default class CourseList extends PureComponent {
   componentDidMount() {
     this.get_course_data();
   }
-  handleModalVisible = (flag) => {
+  handleModalVisible = (flag,onOk,item={},formdisabled=false) => {
+    console.log(onOk);
     this.setState({
       modalVisible: !!flag,
+      onOk:onOk,
+      formdisabled:formdisabled,
     });
+    if(JSON.stringify(item) != '{}'){
+      this.setState({
+        course_id: item._id['$oid'],
+        coursecode: item.code,
+        coursename: item.name,
+        coursedescription: item.description,
+      });
+    }
   }
 
   handleCourseName = (e) => {
@@ -61,12 +75,30 @@ export default class CourseList extends PureComponent {
     });
     console.log(this.props);
     if(this.props.list.rm===true){
-      get_course_data();
+      this.get_course_data();
     }
     message.success('删除成功');
     this.setState({
       modalVisible: false,
     });
+  }
+  handleEdit = () =>{
+    console.log(this.state)
+    this.props.dispatch({
+      type: 'course/edit',
+      payload: {
+        _id:this.state.course_id,
+        name: this.state.coursename,
+        code: this.state.coursecode,
+        description: this.state.coursedescription,
+      },
+    });
+    // this.props 包含dom数据，即添加完成之后刷新页面的数据，每个添加都要掉一次这个
+    message.success('编辑成功');
+    this.setState({
+      modalVisible: false,
+    });
+    this.get_course_data();
   }
   handleAdd = () => {
     this.props.dispatch({
@@ -87,7 +119,7 @@ export default class CourseList extends PureComponent {
 
   render() {
     const { list: { list, loading,rm,newc } } = this.props;
-    const { modalVisible, coursecode, coursename, coursedescription } = this.state;
+    const { modalVisible, coursecode, coursename, coursedescription, onOk, formdisabled } = this.state;
 
     const content = (
       <div className={styles.pageHeaderContent}>
@@ -128,7 +160,12 @@ export default class CourseList extends PureComponent {
             dataSource={['', ...list]}
             renderItem={item => (item ? (
               <List.Item key={item._id['$oid']}>
-                <Card hoverable className={styles.card} actions={[<a>编辑</a>, <a onClick={(e) => this.handleRemove(item._id['$oid'],e)}>删除</a>,<a>查看</a>]}>
+                <Card hoverable className={styles.card} actions={[
+                <a onClick={(e) => this.handleModalVisible(true,this.handleEdit,item,true)}>编辑</a>, 
+                <Popconfirm title="确定删除这个课程吗？" onConfirm={(e) => this.handleRemove(item._id['$oid'],e)} okText="Yes" cancelText="No">
+                <a>删除</a>
+                </Popconfirm>,
+                <a>查看</a>]}>
                   <Card.Meta
                     avatar={ <Badge count={item.unfinish}><img alt="" className={styles.cardAvatar} src={item.avatar} /></Badge>}
                     title={<a href="#">{item.name}</a>}
@@ -140,7 +177,7 @@ export default class CourseList extends PureComponent {
               </List.Item>
               ) : (
                 <List.Item>
-                  <Button type="dashed" className={styles.newButton} onClick={() => this.handleModalVisible(true)}>
+                  <Button type="dashed" className={styles.newButton} onClick={() => this.handleModalVisible(true,this.handleAdd,{},false)}>
                     <Icon type="plus" /> 新增课程
                   </Button>
                 </List.Item>
@@ -151,7 +188,7 @@ export default class CourseList extends PureComponent {
         <Modal
           title="新建课程"
           visible={modalVisible}
-          onOk={this.handleAdd}
+          onOk={onOk || this.handleAdd}
           onCancel={() => this.handleModalVisible()}
         >
           <FormItem
@@ -166,7 +203,7 @@ export default class CourseList extends PureComponent {
             wrapperCol={{ span: 15 }}
             label="编号"
           >
-            <Input placeholder="课程编号" onChange={this.handleCourseCode} value={coursecode} />
+            <Input placeholder="课程编号" disabled={formdisabled} onChange={this.handleCourseCode} value={coursecode} />
           </FormItem>
           <FormItem
             labelCol={{ span: 5 }}

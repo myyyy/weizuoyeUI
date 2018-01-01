@@ -58,6 +58,22 @@ export default {
       });
       if (callback) callback();
     },
+    *edit({payload, callback }, { call, put }) {
+      yield put({
+        type: 'changeLoading',
+        payload: true,
+      });
+      const response = yield call(UpdateCourse, payload);
+      yield put({
+        type: 'editCourse',
+        payload: response,
+      });
+      yield put({
+        type: 'changeLoading',
+        payload: false,
+      });
+      if (callback) callback();
+    },
   },
 
   reducers: {
