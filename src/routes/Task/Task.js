@@ -16,7 +16,7 @@ const FormItem = Form.Item;
 /* eslint react/no-array-index-key: 0 */
 @Form.create()
 @connect(state => ({
-  list: state.list,
+  list: state.task,
 }))
 export default class CoverCardList extends PureComponent {
   

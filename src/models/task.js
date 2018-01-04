@@ -1,5 +1,5 @@
 
-import { queryCourse,AddCourse,UpdateCourse ,DeleteCourse} from '../services/api';
+import { queryTask,AddTask,UpdateTask ,DeleteTask} from '../services/api';
 export default {
   namespace: 'task',
 
@@ -16,6 +16,7 @@ export default {
         type: 'changeLoading',
         payload: true,
       });
+      console.log(payload);
       const response = yield call(queryTask, payload);
       yield put({
         type: 'saveTask',
