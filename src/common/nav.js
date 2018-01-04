@@ -23,6 +23,7 @@ export const getNavData = app => [
           {
             name: '分析页',
             path: 'analysis',
+            hideInMenu: true,
             component: dynamicWrapper(app, ['chart'], () => import('../routes/Dashboard/Analysis')),
           },
           {
@@ -169,6 +170,18 @@ export const getNavData = app => [
             component: dynamicWrapper(app, [], () => import('../routes/Exception/500')),
           },
         ],
+      },
+      {
+        name: '课程',
+        path: 'course',
+        icon: 'file',
+        component: dynamicWrapper(app, ['course'], () => import('../routes/Course/Course')),
+      },
+      {
+        name: '习题',
+        path: 'task/:id',
+        icon: 'file',
+        component: dynamicWrapper(app, ['list'], () => import('../routes/Task/Task')),
       },
     ],
   },

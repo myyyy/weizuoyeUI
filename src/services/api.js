@@ -102,3 +102,28 @@ export async function DeleteCourse(params) {
     body: params,
   });
 }
+
+export async function queryTask() {
+  return request('/task');
+}
+
+export async function AddTask(params) {
+  return request('/task', {
+    method: 'POST',
+    body: params,
+  });
+}
+
+export async function UpdateTask(params) {
+  return request('/task', {
+    method: 'PUT',
+    body: params,
+  });
+}
+
+export async function DeleteTask(params) {
+  return request('/task', {
+    method: 'DELETE',
+    body: params,
+  });
+}

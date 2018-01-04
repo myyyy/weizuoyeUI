@@ -1,6 +1,8 @@
 import React, { PureComponent } from 'react';
+import { routerRedux } from 'dva/router';
+
 import { connect } from 'dva';
-import { Card, Button, Icon, List, Modal, Badge, Form, Input, message,Popconfirm} from 'antd';
+import { Card, Button, Icon, List, Modal, Badge, Form, Input, message, Timeline, Popconfirm} from 'antd';
 
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import Ellipsis from '../../components/Ellipsis';
@@ -50,7 +52,19 @@ export default class CourseList extends PureComponent {
       });
     }
   }
-
+  detilHandleModalVisible = (flag,item={},courseid) =>{
+    // this.setState({
+    //   detilModalVisible: !!flag,
+    // });
+    console.log(routerRedux)
+    // this.props.dispatch(routerRedux.push(
+    //   {
+    //     pathname: 'task/:id',
+    //     query: { id: courseid }
+    //   }
+    // ))
+    this.props.dispatch(routerRedux.push('task/' + courseid));
+  }
   handleCourseName = (e) => {
     this.setState({
       coursename: e.target.value,
@@ -74,13 +88,15 @@ export default class CourseList extends PureComponent {
       },
     });
     console.log(this.props);
-    if(this.props.list.rm===true){
-      this.get_course_data();
-    }
+
     message.success('删除成功');
     this.setState({
       modalVisible: false,
     });
+    // 异步刷新界面
+    setTimeout(() => {
+      this.get_course_data();
+    }, 10);
   }
   handleEdit = () =>{
     console.log(this.state)
@@ -109,17 +125,18 @@ export default class CourseList extends PureComponent {
         description: this.state.coursedescription,
       },
     });
-    // this.props 包含dom数据，即添加完成之后刷新页面的数据，每个添加都要掉一次这个
     message.success('添加成功');
     this.setState({
       modalVisible: false,
     });
+    setTimeout(() => {
     this.get_course_data();
+    }, 0);
   }
 
   render() {
     const { list: { list, loading,rm,newc } } = this.props;
-    const { modalVisible, coursecode, coursename, coursedescription, onOk, formdisabled } = this.state;
+    const { modalVisible,detilModalVisible, coursecode, coursename, coursedescription, onOk, formdisabled } = this.state;
 
     const content = (
       <div className={styles.pageHeaderContent}>
@@ -165,7 +182,9 @@ export default class CourseList extends PureComponent {
                 <Popconfirm title="确定删除这个课程吗？" onConfirm={(e) => this.handleRemove(item._id['$oid'],e)} okText="Yes" cancelText="No">
                 <a>删除</a>
                 </Popconfirm>,
-                <a>查看</a>]}>
+                  <a onClick={() => this.detilHandleModalVisible(true,item,item._id['$oid'])}>查看</a>
+                  // <a path={'/dashboard/analysis'}>查看</a>
+                ]}>
                   <Card.Meta
                     avatar={ <Badge count={item.unfinish}><img alt="" className={styles.cardAvatar} src={item.avatar} /></Badge>}
                     title={<a href="#">{item.name}</a>}
@@ -212,6 +231,21 @@ export default class CourseList extends PureComponent {
           >
             <Input placeholder="课程描述（非必填）" onChange={this.handleCourseDes} value={coursedescription} />
           </FormItem>
+        </Modal>
+        <Modal
+          title="详情"
+          visible={detilModalVisible}
+        >
+          <List 
+          dataSource={['', ...[1,2,3,4]]}
+          renderItem={item =>  (
+            
+            <Timeline.Item color="green">Solve initial network problems 2015-09-01</Timeline.Item>
+            /* // <Timeline.Item color="red" status="processing">Technical testing 2015-09-01 </Timeline.Item>
+            // <Timeline.Item color="red" dot={<Icon type="clock-circle-o" style={{ fontSize: '16px' }} />}>Create a services site 2015-09-01</Timeline.Item> */
+          )}
+          />
+          <Timeline pending={<a href="#">See more</a>}/>
         </Modal>
       </PageHeaderLayout>
     );
