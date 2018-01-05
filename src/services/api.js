@@ -73,7 +73,7 @@ export async function fakeRegister(params) {
     body: params,
   });
 }
-
+//获得用户课程信息
 export async function queryNotices() {
   return request('/api/notices');
 }
@@ -102,9 +102,9 @@ export async function DeleteCourse(params) {
     body: params,
   });
 }
-
-export async function queryTask() {
-  return request('/task');
+//用户课程习题
+export async function queryTask(params) {
+  return request(`/task?${stringify(params)}`);
 }
 
 export async function AddTask(params) {
@@ -127,3 +127,38 @@ export async function DeleteTask(params) {
     body: params,
   });
 }
+
+//获取单个课程习题（or所有课程习题）的CrouseTaskStatus作业完成情况
+export async function getCrouseTaskStatus(params) {
+  return request('/course/task/status', {
+    method: 'DELETE',
+    body: params,
+  });
+}
+
+//根据课程习题id获得课程习题详细内容
+export async function queryCTask(params) {
+  return request(`/course/task?${stringify(params)}`);
+}
+
+export async function AddCTask(params) {
+  return request('/course/task', {
+    method: 'POST',
+    body: params,
+  });
+}
+
+export async function UpdateCTask(params) {
+  return request('/course/task', {
+    method: 'PUT',
+    body: params,
+  });
+}
+
+export async function DeleteCTask(params) {
+  return request('/course/task', {
+    method: 'DELETE',
+    body: params,
+  });
+}
+

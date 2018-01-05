@@ -32,8 +32,8 @@ function checkStatus(response) {
   error.response = response;
   throw error;
 }
-// const HOST = 'http://115.28.72.117:610';
-const HOST = 'http://127.0.0.1:9878';
+const HOST = 'http://115.28.72.117:610'; 
+//const HOST = 'http://127.0.0.1:9878'; 
 /**
  * Requests a URL, returning a promise.
  *

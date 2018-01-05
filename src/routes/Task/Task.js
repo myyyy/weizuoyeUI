@@ -27,6 +27,7 @@ export default class CoverCardList extends PureComponent {
       type: 'task/fetch',
       payload: {
         count: 8,
+        coursetaskid:this.props.match.params.id
       },
     });
   }
