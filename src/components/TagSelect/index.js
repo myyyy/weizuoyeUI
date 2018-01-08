@@ -21,7 +21,7 @@ TagSelectOption.isTagSelectOption = true;
 class TagSelect extends Component {
   state = {
     expand: false,
-    checkedTags: this.props.defaultValue || [],
+    checkedTags: this.props.initialValue || [],
   };
 
   onSelectAll = (checked) => {
