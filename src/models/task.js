@@ -4,7 +4,7 @@ export default {
   namespace: 'task',
 
   state: {
-    list: [],
+    task: [],
     loading: false,
     rm:true,
     newc:'',
@@ -81,7 +81,7 @@ export default {
     saveTask(state, action) {
       return {
         ...state,
-        list: action.payload,
+        task: action.payload,
       };
     },
     changeLoading(state, action) {

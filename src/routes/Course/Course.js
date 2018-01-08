@@ -52,18 +52,16 @@ export default class CourseList extends PureComponent {
       });
     }
   }
-  detilHandleModalVisible = (flag, item = {}, courseid) =>{
-    // this.setState({
-    //   detilModalVisible: !!flag,
-    // });
+  detilHandleModalVisible = (courseid) =>{
+
     console.log(routerRedux);
-    // this.props.dispatch(routerRedux.push(
-    //   {
-    //     pathname: 'task/:id',
-    //     query: { id: courseid }
-    //   }
-    // ))
-    this.props.dispatch(routerRedux.push('task/' + courseid));
+    this.props.dispatch(routerRedux.push(
+      {
+        pathname: 'task',
+        query: { id: courseid },
+      }
+    ));
+    // this.props.dispatch(routerRedux.push('task/' + courseid));
   }
   handleCourseName = (e) => {
     this.setState({
@@ -136,7 +134,6 @@ export default class CourseList extends PureComponent {
 
   render() {
     const { course: { course, loading, rm, newc } } = this.props;
-
     const { modalVisible, detilModalVisible, coursecode, coursename, coursedescription, onOk, formdisabled } = this.state;
     const content = (
       <div className={styles.pageHeaderContent}>
@@ -182,7 +179,7 @@ export default class CourseList extends PureComponent {
                 <Popconfirm title="确定删除这个课程吗？" onConfirm={(e) => this.handleRemove(item._id['$oid'],e)} okText="Yes" cancelText="No">
                 <a>删除</a>
                 </Popconfirm>,
-                  <a onClick={() => this.detilHandleModalVisible(true,item,item._id['$oid'])}>查看</a>
+                  <a onClick={() => this.detilHandleModalVisible(item._id['$oid'])}>查看</a>
                   // <a path={'/dashboard/analysis'}>查看</a>
                 ]}>
                   <Card.Meta

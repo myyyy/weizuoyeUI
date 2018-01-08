@@ -29,7 +29,7 @@ export const getNavData = app => [
       },
       {
         name: '习题',
-        path: 'task/:id',
+        path: 'task',
         icon: 'file',
         component: dynamicWrapper(app, ['task'], () => import('../routes/Task/Task')),
       },

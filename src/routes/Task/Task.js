@@ -14,19 +14,22 @@ const FormItem = Form.Item;
 /* eslint react/no-array-index-key: 0 */
 @Form.create()
 @connect(state => ({
-  list: state.task,
+  task: state.task,
+  course: state.course,
+
 }))
 export default class CoverCardList extends PureComponent {
+  // 公共方法
+
   componentDidMount() {
-    console.log(this.props);
-    console.log(this.props.match.params);
     this.props.dispatch({
       type: 'task/fetch',
       payload: {
         count: 8,
-        coursetaskid:this.props.match.params.id
+        coursetaskid: this.props.match.params.id
       },
     });
+
   }
 
   handleFormSubmit = () => {
@@ -48,15 +51,15 @@ export default class CoverCardList extends PureComponent {
   }
 
   render() {
-    const { list: { list = [], loading }, form } = this.props;
+    const { task: { task = [], loading }, form } = this.props;
     const { getFieldDecorator } = form;
 
-    const cardList = list ? (
+    const cardList = task ? (
       <List
         rowKey="id"
         loading={loading}
         grid={{ gutter: 24, lg: 4, md: 3, sm: 2, xs: 1 }}
-        dataSource={list}
+        dataSource={task}
         renderItem={item => (
           <List.Item>
             <Card
