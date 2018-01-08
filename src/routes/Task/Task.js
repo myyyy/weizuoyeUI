@@ -23,6 +23,13 @@ export default class CoverCardList extends PureComponent {
 
   componentDidMount() {
     this.props.dispatch({
+      type: 'course/fetch',
+      payload: {
+        count: 8,
+      },
+    });
+    console.log(this)
+    this.props.dispatch({
       type: 'task/fetch',
       payload: {
         count: 8,
@@ -51,7 +58,7 @@ export default class CoverCardList extends PureComponent {
   }
 
   render() {
-    const { task: { task = [], loading }, form } = this.props;
+    const { task: { task = [], loading },course:{course=[]}, form } = this.props;
     const { getFieldDecorator } = form;
 
     const cardList = task ? (
@@ -108,18 +115,13 @@ export default class CoverCardList extends PureComponent {
               <FormItem>
                 {getFieldDecorator('category')(
                   <TagSelect onChange={this.handleFormSubmit} expandable>
-                    <TagSelect.Option value="cat1">类目一</TagSelect.Option>
-                    <TagSelect.Option value="cat2">类目二</TagSelect.Option>
-                    <TagSelect.Option value="cat3">类目三</TagSelect.Option>
-                    <TagSelect.Option value="cat4">类目四</TagSelect.Option>
-                    <TagSelect.Option value="cat5">类目五</TagSelect.Option>
-                    <TagSelect.Option value="cat6">类目六</TagSelect.Option>
-                    <TagSelect.Option value="cat7">类目七</TagSelect.Option>
-                    <TagSelect.Option value="cat8">类目八</TagSelect.Option>
-                    <TagSelect.Option value="cat9">类目九</TagSelect.Option>
-                    <TagSelect.Option value="cat10">类目十</TagSelect.Option>
-                    <TagSelect.Option value="cat11">类目十一</TagSelect.Option>
-                    <TagSelect.Option value="cat12">类目十二</TagSelect.Option>
+                  {
+                    course.map(function (item,index) {
+                      return (
+                        <TagSelect.Option key={index} value={item._id['$oid']}>{item.name}</TagSelect.Option>
+                        
+                      )})
+                  }
                   </TagSelect>
                 )}
               </FormItem>

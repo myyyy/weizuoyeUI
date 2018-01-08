@@ -82,7 +82,7 @@ export default class CourseList extends PureComponent {
     this.props.dispatch({
       type: 'course/remove',
       payload: {
-        id: id,
+        _id: id,
       },
     });
     console.log(this.props);
@@ -112,7 +112,10 @@ export default class CourseList extends PureComponent {
     this.setState({
       modalVisible: false,
     });
-    this.get_course_data();
+    // 异步刷新界面
+    setTimeout(() => {
+      this.get_course_data();
+    }, 10);
   }
   handleAdd = () => {
     this.props.dispatch({
@@ -129,7 +132,7 @@ export default class CourseList extends PureComponent {
     });
     setTimeout(() => {
       this.get_course_data();
-    }, 0);
+    }, 10);
   }
 
   render() {
