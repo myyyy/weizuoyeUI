@@ -5,8 +5,6 @@ import { Row, Col, Form, Card, Select, List } from 'antd';
 import StandardFormRow from '../../components/StandardFormRow';
 import TagSelect from '../../components/TagSelect';
 import AvatarList from '../../components/AvatarList';
-import { getPlainNode } from '../../utils/utils';
-
 import styles from './Task.less';
 
 const { Option } = Select;
@@ -19,10 +17,9 @@ const FormItem = Form.Item;
   list: state.task,
 }))
 export default class CoverCardList extends PureComponent {
-  
   componentDidMount() {
     console.log(this.props);
-    console.log(this.props.match.params)
+    console.log(this.props.match.params);
     this.props.dispatch({
       type: 'task/fetch',
       payload: {

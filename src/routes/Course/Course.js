@@ -11,7 +11,7 @@ import styles from './CourseList.less';
 
 const FormItem = Form.Item;
 @connect(state => ({
-  list: state.course,
+  course: state.course,
 }))
 export default class CourseList extends PureComponent {
   state = {
@@ -19,12 +19,12 @@ export default class CourseList extends PureComponent {
     coursename: '',
     coursecode: '',
     coursedescription: '',
-    onOk:'',
-    formdisabled:false,
-    course_id:'',
+    onOk: '',
+    formdisabled: false,
+    course_id: '',
   };
   // 公共方法
-  get_course_data = ()=>{
+  get_course_data = () => {
     const { dispatch } = this.props;
     dispatch({
       type: 'course/fetch',
@@ -40,10 +40,10 @@ export default class CourseList extends PureComponent {
     console.log(onOk);
     this.setState({
       modalVisible: !!flag,
-      onOk:onOk,
-      formdisabled:formdisabled,
+      onOk: onOk,
+      formdisabled: formdisabled,
     });
-    if(JSON.stringify(item) != '{}'){
+    if (JSON.stringify(item) !== '{}') {
       this.setState({
         course_id: item._id['$oid'],
         coursecode: item.code,
@@ -52,11 +52,11 @@ export default class CourseList extends PureComponent {
       });
     }
   }
-  detilHandleModalVisible = (flag,item={},courseid) =>{
+  detilHandleModalVisible = (flag, item = {}, courseid) =>{
     // this.setState({
     //   detilModalVisible: !!flag,
     // });
-    console.log(routerRedux)
+    console.log(routerRedux);
     // this.props.dispatch(routerRedux.push(
     //   {
     //     pathname: 'task/:id',
@@ -80,11 +80,11 @@ export default class CourseList extends PureComponent {
       coursedescription: e.target.value,
     });
   }
-  handleRemove = (_id,e) =>{
+  handleRemove = (id) => {
     this.props.dispatch({
       type: 'course/remove',
-      payload:{
-        _id: _id,
+      payload: {
+        id: id,
       },
     });
     console.log(this.props);
@@ -98,12 +98,12 @@ export default class CourseList extends PureComponent {
       this.get_course_data();
     }, 10);
   }
-  handleEdit = () =>{
-    console.log(this.state)
+  handleEdit = () => {
+    console.log(this.state);
     this.props.dispatch({
       type: 'course/edit',
       payload: {
-        _id:this.state.course_id,
+        _id: this.state.course_id,
         name: this.state.coursename,
         code: this.state.coursecode,
         description: this.state.coursedescription,
@@ -130,14 +130,14 @@ export default class CourseList extends PureComponent {
       modalVisible: false,
     });
     setTimeout(() => {
-    this.get_course_data();
+      this.get_course_data();
     }, 0);
   }
 
   render() {
-    const { list: { list, loading,rm,newc } } = this.props;
-    const { modalVisible,detilModalVisible, coursecode, coursename, coursedescription, onOk, formdisabled } = this.state;
+    const { course: { course, loading, rm, newc } } = this.props;
 
+    const { modalVisible, detilModalVisible, coursecode, coursename, coursedescription, onOk, formdisabled } = this.state;
     const content = (
       <div className={styles.pageHeaderContent}>
         <p>
@@ -174,7 +174,7 @@ export default class CourseList extends PureComponent {
             rowKey="id"
             loading={loading}
             grid={{ gutter: 24, lg: 3, md: 2, sm: 1, xs: 1 }}
-            dataSource={['', ...list]}
+            dataSource={['', ...course]}
             renderItem={item => (item ? (
               <List.Item key={item._id['$oid']}>
                 <Card hoverable className={styles.card} actions={[
@@ -236,10 +236,9 @@ export default class CourseList extends PureComponent {
           title="详情"
           visible={detilModalVisible}
         >
-          <List 
+          <List
           dataSource={['', ...[1,2,3,4]]}
           renderItem={item =>  (
-            
             <Timeline.Item color="green">Solve initial network problems 2015-09-01</Timeline.Item>
             /* // <Timeline.Item color="red" status="processing">Technical testing 2015-09-01 </Timeline.Item>
             // <Timeline.Item color="red" dot={<Icon type="clock-circle-o" style={{ fontSize: '16px' }} />}>Create a services site 2015-09-01</Timeline.Item> */

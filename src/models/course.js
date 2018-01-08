@@ -1,13 +1,14 @@
 
-import { queryCourse,AddCourse,UpdateCourse ,DeleteCourse} from '../services/api';
+import { queryCourse, AddCourse, UpdateCourse, DeleteCourse } from '../services/api';
+
 export default {
   namespace: 'course',
 
   state: {
-    list: [],
+    course: [],
     loading: false,
-    rm:true,
-    newc:'',
+    rm: true,
+    newc: '',
   },
 
   effects: {
@@ -19,7 +20,7 @@ export default {
       const response = yield call(queryCourse, payload);
       yield put({
         type: 'saveCourseList',
-        payload:response.courses,
+        payload: response.courses,
       });
       yield put({
         type: 'changeLoading',
@@ -27,21 +28,21 @@ export default {
       });
     },
     *add({ payload, callback }, { call, put }) {
-        yield put({
-          type: 'changeLoading',
-          payload: true,
-        });
-        const response = yield call(AddCourse, payload);
-        yield put({
-          type: 'addCourse',
-          payload: response,
-        });
-        yield put({
-          type: 'changeLoading',
-          payload: false,
-        });
-        if (callback) callback();
-      },
+      yield put({
+        type: 'changeLoading',
+        payload: true,
+      });
+      const response = yield call(AddCourse, payload);
+      yield put({
+        type: 'addCourse',
+        payload: response,
+      });
+      yield put({
+        type: 'changeLoading',
+        payload: false,
+      });
+      if (callback) callback();
+    },
     *remove({payload, callback }, { call, put }) {
       yield put({
         type: 'changeLoading',
@@ -80,7 +81,7 @@ export default {
     saveCourseList(state, action) {
       return {
         ...state,
-        list: action.payload,
+        course: action.payload,
       };
     },
     changeLoading(state, action) {
@@ -95,11 +96,11 @@ export default {
         newc: action.payload,
       };
     },
-    removeCourse(state,action) {
+    removeCourse(state, action) {
       return {
         ...state,
         rm: action.payload,
-      }; 
-    }
+      };
+    },
   },
 };
