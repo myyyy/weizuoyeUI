@@ -16,11 +16,10 @@ export default {
         type: 'changeLoading',
         payload: true,
       });
-      console.log(payload);
       const response = yield call(queryTask, payload);
       yield put({
         type: 'saveTask',
-        payload:response.courses,
+        payload:response,
       });
       yield put({
         type: 'changeLoading',

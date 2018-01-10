@@ -20,21 +20,21 @@ const FormItem = Form.Item;
 }))
 export default class CoverCardList extends PureComponent {
   // 公共方法
-  coursetaskid = ''
+  courseid = ''
   componentDidMount() {
+    this.courseid = this.props.location.query ? this.props.location.query.id : '';
+    console.log(this.props.location.query);
+    this.props.dispatch({
+      type: 'course/crouseTaskStatus',
+      payload: {
+        count: 8,
+        courseid: this.courseid,
+      },
+    });
     this.props.dispatch({
       type: 'course/fetch',
       payload: {
         count: 8,
-      },
-    });
-    this.coursetaskid = this.props.location.query ? this.props.location.query.id : '';
-    console.log(this.props.location.query);
-    this.props.dispatch({
-      type: 'task/fetch',
-      payload: {
-        count: 8,
-        coursetaskid: this.coursetaskid,
       },
     });
   }
@@ -60,7 +60,7 @@ export default class CoverCardList extends PureComponent {
   render() {
     const { task: { task = [], loading },course:{course=[]}, form } = this.props;
     const { getFieldDecorator } = form;
-    const CourseTaskid = this.coursetaskid
+    const courseid = this.courseid
 
     const cardList = task ? (
       <List
@@ -115,7 +115,7 @@ export default class CoverCardList extends PureComponent {
             <StandardFormRow title="所属类目" block style={{ paddingBottom: 11 }}>
               <FormItem>
                 {getFieldDecorator('category')(
-                  <TagSelect onChange={this.handleFormSubmit} expandable initialValue={CourseTaskid} >
+                  <TagSelect onChange={this.handleFormSubmit} expandable initialValue={courseid} >
                   {
                     course.map(function (item,index) {
                       return (

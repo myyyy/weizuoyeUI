@@ -1,5 +1,5 @@
 
-import { queryCourse, AddCourse, UpdateCourse, DeleteCourse } from '../services/api';
+import { queryCourse, AddCourse, UpdateCourse, DeleteCourse,getCrouseTaskStatus } from '../services/api';
 
 export default {
   namespace: 'course',
@@ -75,6 +75,21 @@ export default {
       });
       if (callback) callback();
     },
+    *crouseTaskStatus({ payload }, { call, put }) {
+      yield put({
+        type: 'changeLoading',
+        payload: true,
+      });
+      const response = yield call(getCrouseTaskStatus, payload);
+      yield put({
+        type: 'courseTaskStatus',
+        payload: response.coursetask,
+      });
+      yield put({
+        type: 'changeLoading',
+        payload: false,
+      });
+    },
   },
 
   reducers: {
@@ -100,6 +115,12 @@ export default {
       return {
         ...state,
         rm: action.payload,
+      };
+    },
+    getCourseTaskStatus(state, action) {
+      return {
+        ...state,
+        courseTaskStatus: action.payload,
       };
     },
   },

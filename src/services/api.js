@@ -130,10 +130,7 @@ export async function DeleteTask(params) {
 
 //获取单个课程习题（or所有课程习题）的CrouseTaskStatus作业完成情况
 export async function getCrouseTaskStatus(params) {
-  return request('/course/task/status', {
-    method: 'DELETE',
-    body: params,
-  });
+  return request(`/course/task/status?${stringify(params)}`);
 }
 
 //根据课程习题id获得课程习题详细内容
