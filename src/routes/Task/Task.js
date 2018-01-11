@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import moment from 'moment';
 import { connect } from 'dva';
-import { Row, Col, Form, Card, Select, List, Button, Modal, Input, Icon} from 'antd';
+import { Row, Col, Form, Card, Select, List, Button, Modal, Input, Icon, DatePicker, Menu} from 'antd';
 import StandardFormRow from '../../components/StandardFormRow';
 import TagSelect from '../../components/TagSelect';
 import AvatarList from '../../components/AvatarList';
@@ -71,7 +71,9 @@ export default class CoverCardList extends PureComponent {
     const { getFieldDecorator } = form;
     const courseid = this.courseid
     const {addTasklModalVisible,onOk,content} = this.state
-    
+    const config = {
+      rules: [{ type: 'object', required: true, message: 'Please select time!' }],
+    }
     const cardList = task ? (
       <List
         rowKey="id"
@@ -194,13 +196,47 @@ export default class CoverCardList extends PureComponent {
           <FormItem
               labelCol={{ span: 5 }}
               wrapperCol={{ span: 15 }}
+              label="课程"
+          >
+            {getFieldDecorator('courseid', {
+              rules: [{ required: true, message: '请选择一个课程！！' }],
+            })(
+            <Select
+              // value={}
+              // size={size}
+              placeholder="选择课程"
+              style={{ width: '50%' }}
+              onChange={this.handleCurrencyChange}
+            >
+              {
+                course.map(function (item,index) {
+                  return (
+                    // <TagSelect.Option key={index} value={item._id['$oid']} defaultChecked='true'>{item.name}</TagSelect.Option>
+                    <Option value={item._id['$oid']} key={index}>{item.name}</Option>
+                  )})
+              }
+            </Select>
+            )}
+          </FormItem>
+          <FormItem
+              labelCol={{ span: 5 }}
+              wrapperCol={{ span: 15 }}
               label="名称"
           >
             {getFieldDecorator('content', {
-            rules: [{ required: true, message: 'Please input your username!' }],
-          })(
-            <Input prefix={<Icon type="user" style={{ fontSize: 13 }} />} placeholder="content" />
-          )}
+              rules: [{ required: true, message: 'Please input your username!' }],
+            })(
+              <Input prefix={<Icon type="user" style={{ fontSize: 13 }} />} placeholder="输入习题内容" />
+            )}
+          </FormItem>
+          <FormItem
+            labelCol={{ span: 5 }}
+            wrapperCol={{ span: 15 }}
+            label="结束时间"
+          >
+            {getFieldDecorator('endtime', config)(
+              <DatePicker />
+            )}
           </FormItem>
       </Modal>
     </div>
