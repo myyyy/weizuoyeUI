@@ -31,7 +31,7 @@ export const getNavData = app => [
         name: '习题',
         path: 'task',
         icon: 'file',
-        component: dynamicWrapper(app, ['task','course'], () => import('../routes/Task/Task')),
+        component: dynamicWrapper(app, ['task','course','coursetask'], () => import('../routes/Task/Task')),
       },
     ],
   },

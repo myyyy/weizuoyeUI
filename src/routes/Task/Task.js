@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import moment from 'moment';
 import { connect } from 'dva';
-import { Row, Col, Form, Card, Select, List } from 'antd';
+import { Row, Col, Form, Card, Select, List, Button, Modal, Input, Icon} from 'antd';
 import StandardFormRow from '../../components/StandardFormRow';
 import TagSelect from '../../components/TagSelect';
 import AvatarList from '../../components/AvatarList';
@@ -19,7 +19,10 @@ const FormItem = Form.Item;
 
 }))
 export default class CoverCardList extends PureComponent {
-  // 公共方法
+  state = {
+    addTasklModalVisible:false,
+    content:'',
+  };
   courseid = ''
   componentDidMount() {
     this.courseid = this.props.location.query ? this.props.location.query.id : '';
@@ -38,17 +41,23 @@ export default class CoverCardList extends PureComponent {
       },
     });
   }
-
+  handleModalVisible = (flag,onOk) =>{
+    this.setState({
+      addTasklModalVisible: !!flag,
+      onOk:onOk,
+    })
+  }
   handleFormSubmit = () => {
     const { form, dispatch } = this.props;
     // setTimeout 用于保证获取表单值是在所有表单字段更新完毕的时候
     setTimeout(() => {
-      form.validateFields((err) => {
+      form.validateFields((err,value) => {
+        console.log(value);
         if (!err) {
-          // eslint-disable-next-line
           dispatch({
-            type: 'task/fetch',
+            type: 'coursetask/add',
             payload: {
+              ...value,
               count: 8,
             },
           });
@@ -61,7 +70,8 @@ export default class CoverCardList extends PureComponent {
     const { task: { task = [], loading },course:{course=[]}, form } = this.props;
     const { getFieldDecorator } = form;
     const courseid = this.courseid
-
+    const {addTasklModalVisible,onOk,content} = this.state
+    
     const cardList = task ? (
       <List
         rowKey="id"
@@ -170,9 +180,30 @@ export default class CoverCardList extends PureComponent {
           </Form>
         </Card>
         <div className={styles.cardList}>
+          <Button onClick={(e) =>this.handleModalVisible(true,this.handleFormSubmit)} type="dashed" style={{ width: '100%', marginBottom: 8 }} icon="plus">
+            添加
+          </Button>
           {cardList}
         </div>
-      </div>
+        <Modal
+        title="详情"
+        visible={addTasklModalVisible}
+        onOk = {onOk || this.handleAddTask}
+        onCancel={() => this.handleModalVisible()}
+        >
+          <FormItem
+              labelCol={{ span: 5 }}
+              wrapperCol={{ span: 15 }}
+              label="名称"
+          >
+            {getFieldDecorator('content', {
+            rules: [{ required: true, message: 'Please input your username!' }],
+          })(
+            <Input prefix={<Icon type="user" style={{ fontSize: 13 }} />} placeholder="content" />
+          )}
+          </FormItem>
+      </Modal>
+    </div>
     );
   }
 }

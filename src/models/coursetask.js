@@ -1,8 +1,8 @@
 
-import { queryCourse, AddCourse, UpdateCourse, DeleteCourse,getCrouseTaskStatus } from '../services/api';
+import { queryCTask, AddCTask, UpdateCTask, DeleteCTask,getCrouseTaskStatus } from '../services/api';
 
 export default {
-  namespace: 'course',
+  namespace: 'coursetask',
 
   state: {
     course: [],
@@ -17,10 +17,10 @@ export default {
         type: 'changeLoading',
         payload: true,
       });
-      const response = yield call(queryCourse, payload);
+      const response = yield call(queryCTask, payload);
       yield put({
-        type: 'saveCourseList',
-        payload: response ? response.courses : [],
+        type: 'saveCTaskList',
+        payload: response ? response.courses:[],
       });
       yield put({
         type: 'changeLoading',
@@ -32,9 +32,9 @@ export default {
         type: 'changeLoading',
         payload: true,
       });
-      const response = yield call(AddCourse, payload);
+      const response = yield call(AddCTask, payload);
       yield put({
-        type: 'addCourse',
+        type: 'addCourseTask',
         payload: response,
       });
       yield put({
@@ -48,9 +48,9 @@ export default {
         type: 'changeLoading',
         payload: true,
       });
-      const response = yield call(DeleteCourse, payload);
+      const response = yield call(DeleteCTask, payload);
       yield put({
-        type: 'removeCourse',
+        type: 'removeCourseTask',
         payload: response,
       });
       yield put({
@@ -64,9 +64,9 @@ export default {
         type: 'changeLoading',
         payload: true,
       });
-      const response = yield call(UpdateCourse, payload);
+      const response = yield call(UpdateCTask, payload);
       yield put({
-        type: 'editCourse',
+        type: 'editCourseTask',
         payload: response,
       });
       yield put({
@@ -93,10 +93,10 @@ export default {
   },
 
   reducers: {
-    saveCourseList(state, action) {
+    saveCTaskList(state, action) {
       return {
         ...state,
-        course: action.payload,
+        courseTask: action.payload,
       };
     },
     changeLoading(state, action) {
@@ -105,16 +105,16 @@ export default {
         loading: action.payload,
       };
     },
-    addCourse(state, action) {
+    addCourseTask(state, action) {
       return {
         ...state,
-        newc: action.payload,
+        newct: action.payload,
       };
     },
-    removeCourse(state, action) {
+    removeCourseTask(state, action) {
       return {
         ...state,
-        rm: action.payload,
+        rmct: action.payload,
       };
     },
     getCourseTaskStatus(state, action) {
