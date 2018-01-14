@@ -1,14 +1,20 @@
 import React, { PureComponent } from 'react';
 import moment from 'moment';
 import { connect } from 'dva';
-import { Row, Col, Form, Card, Select, List, Button, Modal, Input, Icon, DatePicker, Menu} from 'antd';
+import { Row, Col, Form, Card, Select, List, Button, Modal, Input, Icon, DatePicker, 
+Menu, Dropdown, Avatar, Progress, Radio} from 'antd';
 import StandardFormRow from '../../components/StandardFormRow';
 import TagSelect from '../../components/TagSelect';
 import AvatarList from '../../components/AvatarList';
 import styles from './Task.less';
 
+
 const { Option } = Select;
+const RadioGroup = Radio.Group;
+const RadioButton = Radio.Button;
 const FormItem = Form.Item;
+const { Search } = Input;
+
 // const routeData = getRouteData('task');
 
 /* eslint react/no-array-index-key: 0 */
@@ -16,7 +22,6 @@ const FormItem = Form.Item;
 @connect(state => ({
   task: state.task,
   course: state.course,
-
 }))
 export default class CoverCardList extends PureComponent {
   state = {
@@ -67,61 +72,91 @@ export default class CoverCardList extends PureComponent {
   }
 
   render() {
-    const { task: { task = [], loading },course:{course=[]}, form } = this.props;
+    const { task: { task = [], loading },course:{course=[],courseTaskStatus=[]}, form } = this.props;
     const { getFieldDecorator } = form;
     const courseid = this.courseid
     const {addTasklModalVisible,onOk,content} = this.state
     const config = {
       rules: [{ type: 'object', required: true, message: 'Please select time!' }],
     }
-    const cardList = task ? (
-      <List
-        rowKey="id"
-        loading={loading}
-        grid={{ gutter: 24, lg: 4, md: 3, sm: 2, xs: 1 }}
-        dataSource={task}
-        renderItem={item => (
-          <List.Item>
-            <Card
-              className={styles.card}
-              hoverable
-              cover={<img alt={item.title} src={item.cover} height={154} />}
-            >
-              <Card.Meta
-                title={<a href="#">{item.title}</a>}
-                description={item.subDescription}
-              />
-              <div className={styles.cardItemContent}>
-                <span>{moment(item.updatedAt).fromNow()}</span>
-                <div className={styles.avatarList}>
-                  <AvatarList size="mini">
-                    {
-                      item.members.map((member, i) => (
-                        <AvatarList.Item
-                          key={`${item.id}-avatar-${i}`}
-                          src={member.avatar}
-                          tips={member.name}
-                        />
-                      ))
-                    }
-                  </AvatarList>
-                </div>
-              </div>
-            </Card>
-          </List.Item>
-        )}
-      />
-    ) : null;
-
+    const extraContent = (
+      <div className={styles.extraContent}>
+        <RadioGroup defaultValue="all">
+          <RadioButton value="all">全部</RadioButton>
+          <RadioButton value="progress">进行中</RadioButton>
+          <RadioButton value="waiting">等待中</RadioButton>
+        </RadioGroup>
+        <Search
+          className={styles.extraContentSearch}
+          placeholder="请输入"
+          onSearch={() => ({})}
+        />
+      </div>
+    );
+    const MoreBtn = () => (
+      <Dropdown overlay={menu}>
+        <a>
+          更多 <Icon type="down" />
+        </a>
+      </Dropdown>
+    );
+    const menu = (
+      <Menu>
+        <Menu.Item>
+          <a>编辑</a>
+        </Menu.Item>
+        <Menu.Item>
+          <a>删除</a>
+        </Menu.Item>
+      </Menu>
+    );
     const formItemLayout = {
       wrapperCol: {
         xs: { span: 24 },
         sm: { span: 16 },
       },
     };
+    const ListContent = ({ data: { owner, createdAt, percent, status } }) => (
+      <div className={styles.listContent}>
+        <div>
+          <span>Owner</span>
+          <p>{owner}</p>
+        </div>
+        <div>
+          <span>开始时间</span>
+          <p>{moment(createdAt).format('YYYY-MM-DD hh:mm')}</p>
+        </div>
+        <div>
+          <Progress percent={percent} status={status} strokeWidth={6} />
+        </div>
+      </div>
+    );
+    const cardList = courseTaskStatus ? (
+      <List
+      size="large"
+      rowKey="id"
+      loading={loading}
+      // pagination={0}
+      dataSource={courseTaskStatus}
+      renderItem={item => (
+        <List.Item
+          actions={[<a>编辑</a>, <MoreBtn />]}
+        >
+          <List.Item.Meta
+            avatar={<Avatar src={item.owner.$oid} shape="square" size="large" />}
+            title={<a href={item.content}>{item.content}</a>}
+            description={item.content}
+          />
+          <ListContent data={item.fid} />
+        </List.Item>
+      )}
+    />
+    ) : null;
+
+
 
     return (
-      <div className={styles.coverCardList}>
+      <div className={styles.standardList}>
         <Card bordered={false}>
           <Form layout="inline">
             <StandardFormRow title="所属类目" block style={{ paddingBottom: 11 }}>
@@ -181,12 +216,19 @@ export default class CoverCardList extends PureComponent {
             </StandardFormRow>
           </Form>
         </Card>
-        <div className={styles.cardList}>
+        <Card
+          className={styles.listCard}
+          bordered={false}
+          title="课程作业"
+          style={{ marginTop: 24 }}
+          bodyStyle={{ padding: '0 32px 40px 32px' }}
+          extra={extraContent}
+        >
           <Button onClick={(e) =>this.handleModalVisible(true,this.handleFormSubmit)} type="dashed" style={{ width: '100%', marginBottom: 8 }} icon="plus">
             添加
           </Button>
           {cardList}
-        </div>
+        </Card>
         <Modal
         title="详情"
         visible={addTasklModalVisible}

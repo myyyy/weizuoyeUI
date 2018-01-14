@@ -20,7 +20,7 @@ export default {
       const response = yield call(queryCourse, payload);
       yield put({
         type: 'saveCourseList',
-        payload: response ? response.courses : [],
+        payload: response ? response.courses:[],
       });
       yield put({
         type: 'changeLoading',
@@ -117,7 +117,7 @@ export default {
         rm: action.payload,
       };
     },
-    getCourseTaskStatus(state, action) {
+    courseTaskStatus(state, action) {
       return {
         ...state,
         courseTaskStatus: action.payload,
