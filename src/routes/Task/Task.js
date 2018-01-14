@@ -52,6 +52,23 @@ export default class CoverCardList extends PureComponent {
       onOk:onOk,
     })
   }
+  handleTagSubmit = () => {
+    const { form, dispatch } = this.props;
+    // setTimeout 用于保证获取表单值是在所有表单字段更新完毕的时候
+    setTimeout(() => {
+      form.validateFields((err,value) => {
+        console.log(value);
+        dispatch({
+          type: 'course/crouseTaskStatus',
+          payload: {
+            // ...value,
+            count: 8,
+            courseid: value.category.toString(),
+          },
+        });
+      });
+    }, 0);
+  }
   handleFormSubmit = () => {
     const { form, dispatch } = this.props;
     // setTimeout 用于保证获取表单值是在所有表单字段更新完毕的时候
@@ -162,7 +179,7 @@ export default class CoverCardList extends PureComponent {
             <StandardFormRow title="所属类目" block style={{ paddingBottom: 11 }}>
               <FormItem>
                 {getFieldDecorator('category')(
-                  <TagSelect onChange={this.handleFormSubmit} expandable initialValue={courseid} >
+                  <TagSelect onChange={this.handleTagSubmit} expandable initialValue={courseid} >
                   {
                     course.map(function (item,index) {
                       return (
