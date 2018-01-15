@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react';
+import { routerRedux } from 'dva/router';
 import { Layout, Menu, Icon, Spin, Tag, Dropdown, Avatar, message } from 'antd';
 import moment from 'moment';
 import groupBy from 'lodash/groupBy';
@@ -74,6 +75,13 @@ export default class GlobalHeader extends PureComponent {
     });
     this.triggerResizeEvent();
   }
+  joincourse = () =>{
+    this.props.dispatch(routerRedux.push(
+      {
+        pathname: 'joincourse',
+      }
+    ));
+  }
   @Debounce(600)
   triggerResizeEvent() { // eslint-disable-line
     const event = document.createEvent('HTMLEvents');
@@ -101,9 +109,14 @@ export default class GlobalHeader extends PureComponent {
           onClick={this.toggle}
         />
         <div className={styles.right}>
+        <Icon
+          className={styles.trigger}
+          type={'usergroup-add'}
+          onClick={this.joincourse}
+        />
           <HeaderSearch
             className={`${styles.action} ${styles.search}`}
-            placeholder="站内搜索"
+            placeholder="搜索课程"
             dataSource={['搜索提示一', '搜索提示二', '搜索提示三']}
             onSearch={(value) => {
               console.log('input', value); // eslint-disable-line

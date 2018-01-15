@@ -28,6 +28,10 @@ export const getNavData = app => [
         component: dynamicWrapper(app, ['course'], () => import('../routes/Course/Course')),
       },
       {
+        path: 'joincourse',
+        component: dynamicWrapper(app, ['course'], () => import('../routes/Course/JoinCourse')),
+      },
+      {
         name: '习题',
         path: 'task',
         icon: 'file',
